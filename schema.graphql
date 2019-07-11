@@ -1,0 +1,81 @@
+type Receipt{
+    ID: ID!
+    fn:     String!
+    fd:     String!
+    fp:     String!
+    date:   Time
+    sum:    Decimal!
+    place:  String!
+    provider: String!
+    status: String!
+    items: [Item]
+}
+
+type Item{
+    ID: ID!
+    text:   String!
+    price:  Decimal!
+    amount: Decimal!
+}
+
+type User {
+    ID: ID!
+    username: String!
+}
+
+input NewReceipt{
+    fn:     String!
+    fd:     String!
+    fp:     String!
+    date:   String!
+    sum:    Decimal!
+    place:  String!
+}
+
+input ReceiptFilters{
+    date_from: Time
+    date_to: Time
+    summary_min: Decimal
+    summary_max: Decimal
+}
+
+#
+#input SignUpInput {
+#    name: String!
+#    password: String!
+#}
+#
+#input LoginInput {
+#    email: String!
+#    password: String!
+#}
+#
+#type AuthPayload {
+#    user: User!
+#    token: String!
+#}
+#
+#type LogoutResult {
+#    user: User!
+#}
+
+type Mutation {
+    createReceipt(input: NewReceipt!): Int!
+    createReceiptByQR(code: String!): Int!
+
+#    signup(params: SignUpInput!): AuthPayload!
+#    login(params: LoginInput!): AuthPayload!
+#    logout: LogoutResult!
+}
+
+type Query {
+    receipts(input: ReceiptFilters!): [Receipt!]
+    receipt(receiptID: Int!): Receipt
+}
+
+type Subscription {
+    receiptUpdate(userID: Int!): Receipt!
+}
+
+scalar Time
+scalar Decimal

@@ -1,0 +1,36 @@
+# .gqlgen.yml example
+#
+# Refer to https://gqlgen.com/config/
+# for detailed .gqlgen.yml documentation.
+
+schema:
+  - schema.graphql
+exec:
+  filename: generated.go
+model:
+  filename: models_gen.go
+resolver:
+  filename: api/resolver/resolver.go
+  type: Resolver
+models:
+  Decimal:
+    model: github.com/yasnov/goreceipt/api.Decimal
+  Receipt:
+    model: github.com/yasnov/goreceipt/api.Receipt
+  Item:
+    model:  github.com/yasnov/goreceipt/api.Item
+  NewReceipt:
+    model:  github.com/yasnov/goreceipt/api.NewReceipt
+  ReceiptFilters:
+    model:  github.com/yasnov/goreceipt/api.ReceiptFilters
+  User:
+    model:  github.com/yasnov/goreceipt/api.User
+  LoginInput:
+    model:  github.com/yasnov/goreceipt/api.LoginInput
+  AuthPayload:
+    model:  github.com/yasnov/goreceipt/api.AuthPayload
+  LogoutResult:
+    model:  github.com/yasnov/goreceipt/api.LogoutResult
+  SignUpInput:
+    model:  github.com/yasnov/goreceipt/api.SignUpInput
+
