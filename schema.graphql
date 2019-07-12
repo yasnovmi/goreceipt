@@ -62,9 +62,9 @@ type Mutation {
     createReceipt(input: NewReceipt!): Int!
     createReceiptByQR(code: String!): Int!
 
-#    signup(params: SignUpInput!): AuthPayload!
-#    login(params: LoginInput!): AuthPayload!
-#    logout: LogoutResult!
+    #    signup(params: SignUpInput!): AuthPayload!
+    #    login(params: LoginInput!): AuthPayload!
+    #    logout: LogoutResult!
 }
 
 type Query {

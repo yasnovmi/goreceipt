@@ -11,7 +11,6 @@ import (
 	"database/sql"
 	"fmt"
 	"net/url"
-	"strconv"
 	"sync"
 
 	"github.com/99designs/gqlgen/graphql"
@@ -71,24 +70,25 @@ func (r *mutationResolver) CreateReceiptByQr(ctx context.Context, code string) (
 	if err != nil {
 		return -1, err
 	}
-	dateFromString, err := tools.DateFromString(v.Get("t"))
+	date, err := tools.DateFromString(v.Get("t"))
 	if err != nil {
-		graphql.AddError(ctx, err) //"Date in wrong format"
+		graphql.AddError(ctx, fmt.Errorf("Date in wrong format"))
 	}
-	var id int
-	sumFloat, err := strconv.ParseFloat(v.Get("s"), 64)
-	if err != nil {
-		graphql.AddError(ctx, err) //"Summary in wrong format"
-	}
-	decimal.NewFromFloat(sumFloat)
 	newReceipt := &api.Receipt{
 		User: cnf.Config.UserTestID,
 		Fd:   v.Get("i"),
 		Fp:   v.Get("fp"),
 		Fn:   v.Get("fn"),
-		Sum:  decimal.NullDecimal{Decimal: decimal.NewFromFloat(sumFloat), Valid: true},
-		Date: dateFromString,
+		Date: date,
 	}
+	err = newReceipt.Sum.Scan(v.Get("s"))
+	if err != nil {
+		graphql.AddError(ctx, fmt.Errorf("Summary in wrong format"))
+	}
+	if newReceipt.Fp == "" || newReceipt.Fd == "" || newReceipt.Fn == "" || !newReceipt.Sum.Valid || newReceipt.Date.IsZero() {
+		return -1, fmt.Errorf("Not enough arguments")
+	}
+	var id int
 	id, err = CheckReceiptExist(r.DB, newReceipt)
 	if err != nil {
 		return -1, err
@@ -98,7 +98,7 @@ func (r *mutationResolver) CreateReceiptByQr(ctx context.Context, code string) (
 						INSERT INTO receipt (fn, fd, fp, status, date, sum)
 						VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;`
 		err = r.DB.QueryRow(insertReceipt, newReceipt.Fn, newReceipt.Fd,
-			newReceipt.Fp, "UNDEFINED", dateFromString, newReceipt.Sum).Scan(&id)
+			newReceipt.Fp, "UNDEFINED", date, newReceipt.Sum).Scan(&id)
 		if err != nil {
 			return -1, err
 		}
@@ -130,7 +130,7 @@ func (r *mutationResolver) CreateReceipt(ctx context.Context, input api.NewRecei
 	}
 	if id == 0 {
 		insertReceipt := `
-						INSERT INTO receipt (fn, fd, fp, status, date, sum) 
+						INSERT INTO receipt (fn, fd, fp, status, date, sum)
 						VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;`
 		err = r.DB.QueryRow(insertReceipt, input.Fn, input.Fd, input.Fp, "UNDEFINED", dateFromString, input.Sum).Scan(&id)
 		if err != nil {

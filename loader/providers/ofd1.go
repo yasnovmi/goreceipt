@@ -40,23 +40,23 @@ func (r *OFD1Provider) GetItems() []*api.Item {
 func (r *OFD1Provider) Parse() error {
 	err := r.first()
 	if err != nil {
-		return errors.Wrap(err, "OFD1")
+		return errors.Wrap(err, "1-OFD")
 	}
 	token, err := r.second()
 	if err != nil {
-		return errors.Wrap(err, "OFD1")
+		return errors.Wrap(err, "1-OFD")
 	}
 	uid, err := r.find(token)
 	if err != nil {
-		return errors.Wrap(err, "OFD1")
+		return errors.Wrap(err, "1-OFD")
 	}
 	body, err := r.get(token, uid)
 	if err != nil {
-		return errors.Wrap(err, "OFD1")
+		return errors.Wrap(err, "1-OFD")
 	}
 	r.Place, err = jsonparser.GetString(body, "orgTitle")
 	if err != nil {
-		return errors.Wrap(err, "OFD1")
+		return errors.Wrap(err, "1-OFD")
 	}
 	_, err = jsonparser.ArrayEach(body, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
 		item := api.Item{}
@@ -72,9 +72,9 @@ func (r *OFD1Provider) Parse() error {
 		r.Items = append(r.Items, &item)
 	}, "ticket", "items")
 	if err != nil {
-		return errors.Wrap(err, "OFD1")
+		return errors.Wrap(err, "1-OFD")
 	}
-	r.Provider = "OFD1"
+	r.Provider = "1-OFD"
 	return nil
 }
 

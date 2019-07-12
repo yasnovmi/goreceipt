@@ -18,11 +18,6 @@ func CreateNewProvidersLogger() *ProvidersLogger {
 	log.SetFormatter(&logrus.JSONFormatter{})
 
 	dirPath := path.Join(Config.LogPath, "loader/")
-	err := os.MkdirAll(dirPath, os.ModePerm)
-	if err != nil {
-		dirPath = "."
-	}
-
 	f, err := NewLogFile(path.Join(dirPath, Config.StartTime) + ".log")
 	if err == nil {
 		log.SetOutput(f)
@@ -35,17 +30,11 @@ func CreateDBLogger() *logrus.Logger {
 	logger.SetFormatter(&logrus.JSONFormatter{})
 
 	dirPath := path.Join(Config.LogPath, "db/")
-	err := os.MkdirAll(dirPath, os.ModePerm)
-	if err != nil {
-		dirPath = "."
-	}
-
 	f, err := NewLogFile(path.Join(dirPath, Config.StartTime) + ".log")
 	if err == nil {
 		logger.SetOutput(f)
 	}
 	return logger
-
 }
 
 func NewLogFile(path string) (*os.File, error) {

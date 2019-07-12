@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/go-chi/chi/middleware"
 	"log"
 	"net/http"
 	"os"
@@ -16,6 +15,7 @@ import (
 
 	"github.com/99designs/gqlgen/handler"
 	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
 	"github.com/gorilla/websocket"
 	"github.com/joho/godotenv"
 )

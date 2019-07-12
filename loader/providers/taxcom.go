@@ -45,9 +45,6 @@ func (r *TaxcomProvider) Parse() error {
 		return errors.Wrap(err, "Taxcom")
 	}
 	doc.Find("span").Each(func(i int, s *goquery.Selection) {
-		if s.HasClass("value receipt-value-1187") {
-			r.Place = strings.TrimSpace(s.Text())
-		}
 		if r.Fd == "" && s.HasClass("value receipt-value-1040") {
 			r.Fd = strings.TrimSpace(s.Text())
 		}
@@ -55,12 +52,11 @@ func (r *TaxcomProvider) Parse() error {
 			r.Fn = strings.TrimSpace(s.Text())
 		}
 		if r.Date.IsZero() && s.HasClass("value receipt-value-1012") {
-			r.Date, _ = time.Parse("01.02.2006 15:04", strings.TrimSpace(s.Text()))
+			fmt.Println(s.Text())
+			r.Date, _ = time.Parse("02.01.2006 15:04", strings.TrimSpace(s.Text()))
 		}
 	})
-	if r.Place == "" {
-		r.Place = strings.TrimSpace(doc.Find(".receipt-subtitle").Text())
-	}
+	r.Place = strings.TrimSpace(doc.Find(".receipt-subtitle").Text())
 
 	doc.Find(".item").Each(func(i int, s *goquery.Selection) {
 		text := strings.TrimSpace(s.Find(".receipt-row-1").First().Text())
