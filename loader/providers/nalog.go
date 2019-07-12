@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/yasnov/goreceipt/api"
 	. "github.com/yasnov/goreceipt/config"
@@ -61,8 +62,8 @@ func (r *NalogProvider) Parse() error {
 		return errors.Wrap(err, "Nalog")
 	}
 	r.Place, err = jsonparser.GetString(body, "document", "receipt", "user")
-	if err != nil {
-		return errors.Wrap(err, "Nalog")
+	if err != nil || r.Place == "" {
+		r.Place, _ = jsonparser.GetString(body, "document", "receipt", "userInn")
 	}
 	_, err = jsonparser.ArrayEach(body, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
 		item := api.Item{}
@@ -145,10 +146,10 @@ func (r *NalogProvider) getData(try int) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	if resp.StatusCode == 202 && try <= 2 {
+	if resp.StatusCode == 202 && try <= 8 {
+		time.Sleep(time.Millisecond * 300)
 		return r.getData(try + 1)
-	}
-	if resp.StatusCode != 200 {
+	} else if resp.StatusCode != 200 {
 		return nil, fmt.Errorf("%s", resp.Status)
 	}
 	return body, nil
