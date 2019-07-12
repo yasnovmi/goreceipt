@@ -76,32 +76,36 @@ func UpdateReceiptAfterParsing(db *sqlx.DB, rec *api.Receipt) error {
 	if err != nil {
 		return err
 	}
+
 	sqlStatement := `
 		UPDATE receipt
 		SET date = $2, provider = $3, status = $4, place_id = $5, fn = $6, fp = $7, fd = $8
 		WHERE id = $1;`
 	_, err = db.Exec(sqlStatement, rec.ID, rec.Date, rec.Provider, rec.Status,
-		placeID, rec.Fn, rec.Fd, rec.Fp)
+		placeID, rec.Fn, rec.Fp, rec.Fd)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func SavePlace(db *sqlx.DB, rec *api.Receipt) (int, error) {
+func SavePlace(db *sqlx.DB, rec *api.Receipt) (*int, error) {
+	if rec.Place == "" {
+		return nil, nil
+	}
 	var id int
 	err := db.QueryRow("SELECT id FROM place WHERE text = $1;", rec.Place).Scan(&id)
 	if err != nil && err != sql.ErrNoRows {
-		return -1, err
+		return nil, err
 	}
 	if id != 0 {
-		return id, nil
+		return &id, nil
 	} else {
 		err = db.QueryRow("INSERT INTO place (text) VALUES ($1) RETURNING id;", rec.Place).Scan(&id)
 		if err != nil {
-			return -1, err
+			return nil, err
 		}
-		return id, nil
+		return &id, nil
 	}
 }
 

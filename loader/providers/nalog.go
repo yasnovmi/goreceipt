@@ -56,7 +56,7 @@ func (r *NalogProvider) Parse() error {
 	if err != nil {
 		return errors.Wrap(err, "Nalog")
 	}
-	body, err := r.getData()
+	body, err := r.getData(0)
 	if err != nil {
 		return errors.Wrap(err, "Nalog")
 	}
@@ -129,7 +129,7 @@ func (r *NalogProvider) search() error {
 	return nil
 }
 
-func (r *NalogProvider) getData() ([]byte, error) {
+func (r *NalogProvider) getData(try int) ([]byte, error) {
 	url := fmt.Sprintf(getDataURL, r.Fn, r.Fd, r.Fp)
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
@@ -144,6 +144,9 @@ func (r *NalogProvider) getData() ([]byte, error) {
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
+	}
+	if resp.StatusCode == 202 && try <= 2 {
+		return r.getData(try + 1)
 	}
 	if resp.StatusCode != 200 {
 		return nil, fmt.Errorf("%s", resp.Status)

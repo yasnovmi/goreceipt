@@ -248,8 +248,5 @@ func CheckReceiptExist(db *sqlx.DB, rec *api.Receipt) (int, error) {
 	if err != nil && err != sql.ErrNoRows {
 		return 0, err
 	}
-	if id != 0 {
-		return id, nil
-	}
-	return 0, nil
+	return id, nil
 }

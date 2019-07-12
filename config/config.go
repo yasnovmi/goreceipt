@@ -38,8 +38,8 @@ func New() *config {
 			Host:     getEnv("DB_HOST", "127.0.0.1"),
 		},
 		Nalog: NalogConfig{
-			Login:    getEnv("GITHUB_USERNAME", ""),
-			Password: getEnv("GITHUB_API_KEY", ""),
+			Login:    getEnv("NALOG_LOGIN", ""),
+			Password: getEnv("NALOG_PASS", ""),
 		},
 		LogPath:    getEnv("LOGPATH", "."),
 		StartTime:  time.Now().Format("2006-01-02T15:04:05"),

@@ -44,6 +44,11 @@ func (r *TaxcomProvider) Parse() error {
 	if err != nil {
 		return errors.Wrap(err, "Taxcom")
 	}
+	isFind := doc.Find("jumbotron notfound")
+	if isFind != nil {
+		return errors.Wrap(fmt.Errorf("Receipt not found"), "Taxcom")
+	}
+
 	doc.Find("span").Each(func(i int, s *goquery.Selection) {
 		if r.Fd == "" && s.HasClass("value receipt-value-1040") {
 			r.Fd = strings.TrimSpace(s.Text())
