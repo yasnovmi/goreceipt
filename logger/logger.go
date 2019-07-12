@@ -18,7 +18,7 @@ func CreateNewProvidersLogger() *ProvidersLogger {
 	log.SetFormatter(&logrus.JSONFormatter{})
 
 	dirPath := path.Join(Config.LogPath, "loader/")
-	f, err := NewLogFile(path.Join(dirPath, Config.StartTime) + ".log")
+	f, err := NewLogFile(path.Join(dirPath, "providers") + ".log")
 	if err == nil {
 		log.SetOutput(f)
 	}
@@ -30,7 +30,7 @@ func CreateDBLogger() *logrus.Logger {
 	logger.SetFormatter(&logrus.JSONFormatter{})
 
 	dirPath := path.Join(Config.LogPath, "db/")
-	f, err := NewLogFile(path.Join(dirPath, Config.StartTime) + ".log")
+	f, err := NewLogFile(path.Join(dirPath, "database") + ".log")
 	if err == nil {
 		logger.SetOutput(f)
 	}
@@ -38,7 +38,7 @@ func CreateDBLogger() *logrus.Logger {
 }
 
 func NewLogFile(path string) (*os.File, error) {
-	f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE, 0755)
+	f, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0755)
 	if err != nil {
 		return f, nil
 	}
