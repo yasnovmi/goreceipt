@@ -32,7 +32,7 @@ func Connect() (*sqlx.DB, error) {
 	//db := stdlib.OpenDBFromPool(pool)
 
 	db := stdlib.OpenDB(pgx.ConnConfig{
-		Host:     "127.0.0.1",
+		Host:     Config.DB.Host,
 		User:     Config.DB.User,
 		Password: Config.DB.Password,
 		Database: Config.DB.Name,

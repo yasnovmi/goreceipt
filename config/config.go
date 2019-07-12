@@ -12,6 +12,7 @@ type DatabaseConfig struct {
 	Name     string
 	User     string
 	Password string
+	Host     string
 }
 
 type NalogConfig struct {
@@ -34,6 +35,7 @@ func New() *config {
 			Name:     getEnv("DB_NAME", ""),
 			User:     getEnv("DB_USER", ""),
 			Password: getEnv("DB_PASS", ""),
+			Host:     getEnv("DB_HOST", "127.0.0.1"),
 		},
 		Nalog: NalogConfig{
 			Login:    getEnv("GITHUB_USERNAME", ""),
