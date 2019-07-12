@@ -412,7 +412,6 @@ input NewReceipt{
     fp:     String!
     date:   String!
     sum:    Decimal!
-    place:  String!
 }
 
 input ReceiptFilters{
@@ -2637,12 +2636,6 @@ func (ec *executionContext) unmarshalInputNewReceipt(ctx context.Context, obj in
 		case "sum":
 			var err error
 			it.Sum, err = ec.unmarshalNDecimal2githubᚗcomᚋshopspringᚋdecimalᚐNullDecimal(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "place":
-			var err error
-			it.Place, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}

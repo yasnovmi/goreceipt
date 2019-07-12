@@ -19,12 +19,11 @@ type Item struct {
 }
 
 type NewReceipt struct {
-	Fn    string              `json:"fn"`
-	Fd    string              `json:"fd"`
-	Fp    string              `json:"fp"`
-	Date  string              `json:"date"`
-	Sum   decimal.NullDecimal `json:"sum"`
-	Place string              `json:"place"`
+	Fn   string              `json:"fn"`
+	Fd   string              `json:"fd"`
+	Fp   string              `json:"fp"`
+	Date string              `json:"date"`
+	Sum  decimal.NullDecimal `json:"sum"`
 }
 
 type Receipt struct {
